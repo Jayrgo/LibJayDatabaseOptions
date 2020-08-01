@@ -1,0 +1,22 @@
+name: Luacheck
+
+on:
+  push:
+    branches-ignore:
+      - refs/tags/*
+  pull_request:
+    branches-ignore:
+      - refs/tags/*
+
+jobs:
+  main:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v1
+      - name: Install LuaRocks
+        run: sudo apt-get install luarocks
+      - name: Install Luacheck
+        run: luarocks install --local luacheck
+      - name: Run Luacheck
+        run: /home/runner/.luarocks/bin/luacheck .

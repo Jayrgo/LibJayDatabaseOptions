@@ -180,7 +180,7 @@ function lib:GetOptionFunctions(db)
                     db:Set(..., unpack(info, 1, #info))
                 end
             end, function(info, ...)
-                if info.type == "select" and info.isMulti then
+                if info.type == "select" and info.isMulti then -- luacheck: ignore 542
 
                 elseif info.type == "color" then
                     local color = db:GetDefault(unpack(info, 1, #info))
@@ -238,7 +238,7 @@ function lib:GetGlobalOptionFunctions(db)
                     db:SetGlobal(..., unpack(info, 1, #info))
                 end
             end, function(info, ...)
-                if info.type == "select" and info.isMulti then
+                if info.type == "select" and info.isMulti then -- luacheck: ignore 542
 
                 elseif info.type == "color" then
                     local color = db:GetGlobalDefault(unpack(info, 1, #info))
