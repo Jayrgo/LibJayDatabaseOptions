@@ -31,14 +31,11 @@ function OptionHandlerMixin:GetProfile(info) return self.db:GetProfile() end
 
 ---@param info table
 ---@param value string
-function OptionHandlerMixin:SetProfile(info, value)
-    if value then self.db:SetProfile(value) end
-end
+function OptionHandlerMixin:SetProfile(info, value) if value then self.db:SetProfile(value) end end
 
 local DEFAULT_PROFILES = {
-    UnitName("player") .. " - " .. GetRealmName(), GetRealmName(),
-    select(2, UnitFactionGroup("player")), UnitRace("player"),
-    (UnitClass("player"))
+    UnitName("player") .. " - " .. GetRealmName(), GetRealmName(), select(2, UnitFactionGroup("player")),
+    UnitRace("player"), (UnitClass("player")),
 }
 ---@param info table
 ---@return table profiles
@@ -70,25 +67,17 @@ end
 
 ---@param info table
 ---@param value string
-function OptionHandlerMixin:CopyProfile(info, value)
-    if value then self.db:CopyProfile(value) end
-end
+function OptionHandlerMixin:CopyProfile(info, value) if value then self.db:CopyProfile(value) end end
 
 ---@param info table
 ---@param value string
-function OptionHandlerMixin:DeleteProfile(info, value)
-    if value then self.db:DeleteProfile(value) end
-end
+function OptionHandlerMixin:DeleteProfile(info, value) if value then self.db:DeleteProfile(value) end end
 
 ---@param info table
-function OptionHandlerMixin:ResetProfile(info)
-    self.db:ResetProfile(self.db:GetProfile())
-end
+function OptionHandlerMixin:ResetProfile(info) self.db:ResetProfile(self.db:GetProfile()) end
 
 ---@param info table
-function OptionHandlerMixin:LastChange(info)
-    return "|cffffffff" .. self.db:GetLastChange() .. "|r"
-end
+function OptionHandlerMixin:LastChange(info) return "|cffffffff" .. self.db:GetLastChange() .. "|r" end
 
 lib.handlers = lib.handlers or {}
 local handlers = lib.handlers
@@ -111,40 +100,16 @@ local strlen = strlen
 local function validate(arg, value) return strlen(value) > 0 end
 
 local OPTION_LIST = {
-    {
-        type = "select",
-        text = L.CURRENT,
-        get = "GetProfile",
-        set = "SetProfile",
-        values = "GetCurrentProfiles"
-    }, {
-        type = "string",
-        text = L.NEW,
-        set = "SetProfile",
-        onSet = onSet,
-        validate = validate
-    }, {
-        type = "select",
-        text = L.COPY_FROM,
-        set = "CopyProfile",
-        values = "GetProfiles"
-    }, {
-        type = "select",
-        text = L.DELETE,
-        set = "DeleteProfile",
-        values = "GetProfiles"
-    } --[[ ,
+    {type = "select", text = L.CURRENT, get = "GetProfile", set = "SetProfile", values = "GetCurrentProfiles"},
+    {type = "string", text = L.NEW, set = "SetProfile", onSet = onSet, validate = validate},
+    {type = "select", text = L.COPY_FROM, set = "CopyProfile", values = "GetProfiles"},
+    {type = "select", text = L.DELETE, set = "DeleteProfile", values = "GetProfiles"} --[[ ,
     {
         type = "function",
         text = L.RESET,
         func = "ResetProfile"
-    } ]] , {
-        type = "string",
-        text = L.LAST_CONFIGURATION_CHANGE,
-        get = "LastChange",
-        isReadOnly = true,
-        justifyH = "RIGHT"
-    }
+    } ]] ,
+    {type = "string", text = L.LAST_CONFIGURATION_CHANGE, get = "LastChange", isReadOnly = true, justifyH = "RIGHT"},
 }
 
 local error = error
@@ -155,26 +120,17 @@ local LJOptions = LibStub("LibJayOptions")
 ---@param parent string
 function lib:New(db, parent)
     if type(db) ~= "table" then
-        error(format(
-                  "Usage: %s:New(db[, parent]): 'db' - table expected got %s",
-                  MAJOR, type(db)), 2)
+        error(format("Usage: %s:New(db[, parent]): 'db' - table expected got %s", MAJOR, type(db)), 2)
     end
     if parent then
         if type(parent) ~= "string" then
-            error(format(
-                      "Usage: %s:New(db[, parent]): 'parent' - string expected got %s",
-                      MAJOR, type(parent)), 2)
+            error(format("Usage: %s:New(db[, parent]): 'parent' - string expected got %s", MAJOR, type(parent)), 2)
         end
         local optionList = {handler = getOptionHandler(db)}
         for i = 1, #OPTION_LIST do optionList[i] = OPTION_LIST[i] end
         LJOptions:New(L.PROFILES, parent, optionList)
     else
-        return {
-            type = "header",
-            text = L.PROFILES,
-            handler = getOptionHandler(db),
-            optionList = OPTION_LIST
-        }
+        return {type = "header", text = L.PROFILES, handler = getOptionHandler(db), optionList = OPTION_LIST}
     end
 end
 setmetatable(lib, {__call = lib.New})
@@ -190,9 +146,7 @@ local unpack = unpack
 ---@return function default
 function lib:GetOptionFunctions(db)
     if type(db) ~= "table" then
-        error(format(
-                  "Usage: %s:GetOptionFunctions(db): 'db' - table expected got %s",
-                  MAJOR, type(db)), 2)
+        error(format("Usage: %s:GetOptionFunctions(db): 'db' - table expected got %s", MAJOR, type(db)), 2)
     end
 
     if not optionsFuncs[db] then
@@ -238,7 +192,7 @@ function lib:GetOptionFunctions(db)
                 else
                     return db:GetDefault(unpack(info, 1, #info))
                 end
-            end
+            end,
         }
     end
 
@@ -250,9 +204,7 @@ local globalOptionsFuncs = lib.globalOptionsFuncs
 
 function lib:GetGlobalOptionFunctions(db)
     if type(db) ~= "table" then
-        error(format(
-                  "Usage: %s:GetGlobalOptionFunctions(db): 'db' - table expected got %s",
-                  MAJOR, type(db)), 2)
+        error(format("Usage: %s:GetGlobalOptionFunctions(db): 'db' - table expected got %s", MAJOR, type(db)), 2)
     end
 
     if not globalOptionsFuncs[db] then
@@ -298,7 +250,7 @@ function lib:GetGlobalOptionFunctions(db)
                 else
                     return db:GetGlobalDefault(unpack(info, 1, #info))
                 end
-            end
+            end,
         }
     end
 

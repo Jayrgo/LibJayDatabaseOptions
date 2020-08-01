@@ -1,0 +1,2 @@
+column_limit: 120
+extra_sep_at_table_end: true
